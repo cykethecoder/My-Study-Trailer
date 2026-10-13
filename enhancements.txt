@@ -1,0 +1,73 @@
+StudyTrailer – Enhancement Features
+
+1. Extra Features Implemented
+
+
+• Dashboard homepage with personalised welcome message
+• “Get To Know You” modal for first-time user setup
+• User profile personalisation (name, diploma, semester display)
+• Edit Profile / My Profile feature
+• Automatic semester prediction and semester progression helper
+• Search and filtering for Study Sessions
+• Search and filtering for Modules
+• Search and filtering for Study Goals
+• Goal progress tracking using status (Not Started, In Progress, Completed)
+• Dynamic dashboard statistics and counters
+• Upcoming exam countdown timer on dashboard
+• Grouping records by Year & Semester
+• Dynamic module dropdown linking across forms
+• Study session image support using image URLs (saved under imgs folder, in resources)
+• Bootstrap responsive UI design
+• Delete confirmation popups
+• Dynamic EJS rendering using loops and conditions
+• Automatic form pre-filling using saved profile data
+
+------------------------------------------------------------
+
+2. Number of Routes Implemented in Total
+
+Total Routes Implemented: 31
+
+Routes Implemented:
+
+1. GET /
+2. POST /saveProfile
+
+Study Sessions
+3. GET /sessions
+4. GET /addSession
+5. POST /addSession
+6. GET /details/:id
+7. GET /editSessions/:id
+8. POST /editSessions/:id
+9. GET /deleteSession/:id
+10. GET /searchSessions
+
+Modules
+11. GET /modules
+12. GET /addModule
+13. POST /addModule
+14. GET /editModule/:id
+15. POST /editModule/:id
+16. GET /deleteModule/:id
+17. GET /searchModules
+
+Study Goals
+18. GET /goals
+19. GET /addGoal
+20. POST /addGoal
+21. GET /goalDetails/:id
+22. GET /editGoal/:id
+23. POST /editGoal/:id
+24. GET /deleteGoal/:id
+25. GET /searchGoals
+
+Important Dates
+26. GET /importantDates
+27. GET /addImportantDate
+28. POST /addImportantDate
+29. POST /editImportantDate/:id
+30. GET /deleteImportantDate/:id
+
+Profile
+31. GET /editProfile
