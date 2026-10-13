@@ -23,6 +23,20 @@ Users can manage their modules, record study sessions, set study goals, track im
 - JavaScript
 
 ## Screenshots
+### Dashboard
+![StudyTrailer Dashboard](screenshots/dashboard.png)
+
+### Study Goals
+![StudyTrailer Study Goals](screenshots/study-goals.png)
+
+### Study Sessions
+![StudyTrailer Study Sessions](screenshots/study-sessions.png)
+
+### Modules
+![StudyTrailer Modules](screenshots/modules.png)
+
+### Important Dates
+![StudyTrailer Important Dates](screenshots/important-dates.png)
 
 ### Dashboard
 [Insert dashboard screenshot]
