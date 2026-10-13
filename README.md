@@ -18,8 +18,6 @@ Users can manage their modules, record study sessions, set study goals, track im
 
 - Node.js
 - Express.js
-- [Add your database here]
-- [Add your template/frontend technology here]
 - HTML
 - CSS
 - JavaScript
