@@ -1,0 +1,110 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Add Important Date – StudyTrailer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1 class="mb-4">Add Important Date</h1>
+
+        <form action="/addImportantDate" method="POST">
+
+        <!-- Module dropdown linked dynamically to existing modules -->
+        <!-- Users can select previously added modules instead of -->
+        <!-- manually typing module names to reduce input mistakes -->
+            <div class="mb-3">
+                <label for="module" class="form-label fw-semibold">Module</label>
+
+                <select class="form-select" id="module" name="module" required>
+                    <option value="">-- Select a Module --</option>
+
+                    // Loop through all existing modules stored in memory
+                    // and display them dynamically inside the dropdown
+                    <% modules.forEach(module => { %>
+                        <option value="<%= module.moduleCode %> - <%= module.moduleName %>">
+                            <%= module.moduleCode %> - <%= module.moduleName %>
+                        </option>
+                    <% }) %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label for="lessonsCovered" class="form-label fw-semibold">Lessons Covered</label>
+                <input type="text" class="form-control" id="lessonsCovered" name="lessonsCovered"
+                    placeholder="e.g. Week 1 – 4 (Routing, EJS, CRUD)" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="examDate" class="form-label fw-semibold">Exam Date</label>
+                <!-- Automatically fills today's date as the default exam date -->
+                <input type="date" class="form-control" id="examDate" name="examDate"
+                    value="<%= today %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label for="examType" class="form-label fw-semibold">Exam Type</label>
+
+                <!-- Dropdown selection for different examination types -->
+                <select class="form-select" id="examType" name="examType" required>
+                    <option value="" disabled selected>Select exam type</option>
+                    <option value="CA1">CA1</option>
+                    <option value="CA2">CA2</option>
+                    <option value="FA">FA</option>
+                </select>
+            </div>
+            
+            <!-- Semester dropdown automatically pre-selects -->
+            <!-- the user's current semester based on -->
+            <!-- personalised profile information -->
+
+            <div class="mb-3">
+                <label for="yearSemester" class="form-label fw-semibold">Year &amp; Semester</label>
+                <select class="form-select" id="yearSemester" name="yearSemester" required>
+                    <option value="" disabled>Select year &amp; semester</option>
+                    <%
+                        const options = [
+                            "Year 1 Semester 1", "Year 1 Semester 2",
+                            "Year 2 Semester 1", "Year 2 Semester 2",
+                            "Year 3 Semester 1", "Year 3 Semester 2"
+                        ];
+            // forEach loop goes through every semester option
+            // one by one dynamically
+            //
+            // 'opt' represents the current semester option
+            // currently being processed in the loop
+            //
+            // Example:
+            // First loop  -> opt = "Year 1 Semester 1"
+            // Second loop -> opt = "Year 1 Semester 2"
+                        options.forEach(function(opt) {
+                            const selected = userProfile && userProfile.yearSemester === opt ? 'selected' : '';
+                    %>
+                        <option value="<%= opt %>" <%= selected %>><%= opt %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <div class="d-flex gap-2">
+                <button type="submit" class="btn btn-success">Save</button>
+                <a href="/importantDates" class="btn btn-secondary">Cancel</a>
+            </div>
+
+        </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

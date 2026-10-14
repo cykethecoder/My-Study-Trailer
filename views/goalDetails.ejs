@@ -1,0 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Goal Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Study Goal Details</h1>
+
+        <div class="card mt-3">
+            <div class="card-body">
+
+                <h3><%= goal.goalTitle %></h3>
+
+                <p>
+                    <strong>Related Module:</strong>
+                    <%= goal.relatedModule %>
+                </p>
+
+                <p>
+                    <strong>Target Completion Date:</strong>
+                    <%= goal.targetDate %>
+                </p>
+
+                <p>
+                    <strong>Status:</strong>
+                    <%= goal.status %>
+                </p>
+
+                <p>
+                    <strong>Description:</strong>
+                    <%= goal.description %>
+                </p>
+
+                <a href="/editGoal/<%= id %>" class="btn btn-warning">
+                    Edit
+                </a>
+
+                <a href="/goals" class="btn btn-secondary">
+                    Back
+                </a>
+
+            </div>
+        </div>
+
+    </div>
+
+</body>
+</html>

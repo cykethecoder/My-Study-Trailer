@@ -1,0 +1,109 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Study Goal</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Edit Study Goal</h1>
+
+        <form action="/editGoal/<%= id %>" method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Goal Title:</label>
+                <input type="text" name="goalTitle" class="form-control"
+                       value="<%= goal.goalTitle %>"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Related Module:</label>
+
+                <select name="relatedModule" class="form-control" required>
+                    <% for (let i = 0; i < modules.length; i++) { %>
+
+                        <option value="<%= modules[i].moduleCode %> <%= modules[i].moduleName %>"
+                            <%= goal.relatedModule == modules[i].moduleCode + " " + modules[i].moduleName ? "selected" : "" %>>
+
+                            <%= modules[i].moduleCode %> - <%= modules[i].moduleName %>
+
+                        </option>
+
+                    <% } %>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Target Completion Date:</label>
+                <input type="date" name="targetDate" class="form-control"
+                       value="<%= goal.targetDate %>"
+                       required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Status:</label>
+
+                <select name="status" class="form-control" required>
+                    <option value="Not Started" <%= goal.status == "Not Started" ? "selected" : "" %>>Not Started</option>
+                    <option value="In Progress" <%= goal.status == "In Progress" ? "selected" : "" %>>In Progress</option>
+                    <option value="Completed" <%= goal.status == "Completed" ? "selected" : "" %>>Completed</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Goal Description / Notes:</label>
+
+                <textarea name="description"
+                        class="form-control"
+                        required><%= goal.description %></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Year &amp; Semester:</label>
+                <select name="yearSemester" class="form-control" required>
+                    <option value="" disabled>Select year &amp; semester</option>
+                    <%
+                        const semOptions = [
+                            "Year 1 Semester 1", "Year 1 Semester 2",
+                            "Year 2 Semester 1", "Year 2 Semester 2",
+                            "Year 3 Semester 1", "Year 3 Semester 2"
+                        ];
+            // forEach loop goes through every semester option
+            // one by one dynamically
+            //
+            // 'opt' represents the current semester option
+            // currently being processed in the loop
+            //
+            // Example:
+            // First loop  -> opt = "Year 1 Semester 1"
+            // Second loop -> opt = "Year 1 Semester 2"
+                        semOptions.forEach(function(opt) {
+                            const sel = goal.yearSemester === opt ? 'selected' : '';
+                    %>
+                        <option value="<%= opt %>" <%= sel %>><%= opt %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Save Changes</button>
+            <a href="/goals" class="btn btn-secondary">Cancel</a>
+
+        </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

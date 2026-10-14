@@ -1,0 +1,254 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Study Goals</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body>
+
+    <!-- Reusable shared navigation header included across all pages -->
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Study Goals</h1>
+
+        <!-- Search and filter goals -->
+        <!-- Special Feature:
+             Allows users to search goals by module
+             and filter goals by completion status -->
+
+        <form action="/searchGoals" method="GET" class="mb-4">
+
+            <div class="row">
+
+                <!-- Search by module code or module name -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Search by Module Code / Name:
+                    </label>
+
+                    <input type="text"
+                        name="moduleKeyword"
+                        class="form-control"
+                        placeholder="Example: C237 or Software Application">
+
+                </div>
+
+                <!-- Filter goals by current completion status -->
+
+                <div class="col-md-6">
+
+                    <label class="form-label">
+                        Filter by Status:
+                    </label>
+
+                    <select name="status" class="form-control">
+
+                        <option value="">All Statuses</option>
+
+                        <option value="Not Started">
+                            Not Started
+                        </option>
+
+                        <option value="In Progress">
+                            In Progress
+                        </option>
+
+                        <option value="Completed">
+                            Completed
+                        </option>
+
+                    </select>
+
+                </div>
+
+            </div>
+
+            <!-- Search button submits the filter form -->
+
+            <div class="mt-3">
+                <button type="submit" class="btn btn-primary">
+                    Search / Filter
+                </button>
+            </div>
+
+        </form>
+
+        <!-- Add new study goal button -->
+
+        <div class="d-flex justify-content-end mb-2">
+            <a href="/addGoal" class="btn btn-success">
+                Add Goal
+            </a>
+        </div>
+
+        <!-- Check whether there are any study goals stored -->
+        <!-- If no goals exist, display a simple message -->
+
+        <% if (goals.length === 0) { %>
+
+            <p>No study goals added yet.</p>
+
+        <% } else {
+
+            // Create an empty object used to group goals
+            // according to their year & semester
+            const grouped = {};
+
+            // Loop through every goal one by one
+            goals.forEach(function(goal) {
+
+                // Get the semester of the current goal
+                // If missing, store under "Unknown"
+                const key = goal.yearSemester || 'Unknown';
+
+                // If this semester group does not exist yet,
+                // create an empty array for it
+                if (!grouped[key]) grouped[key] = [];
+
+                // Add the current goal into the correct semester group
+                grouped[key].push(goal);
+            });
+
+            // Get all semester names and sort them neatly
+            const semesters = Object.keys(grouped).sort();
+
+        %>
+
+            <!-- Loop through every semester group dynamically -->
+
+            <% semesters.forEach(function(sem) {
+
+                // Check whether this semester matches
+                // the user's current semester from profile
+                const isCurrent =
+                    userProfile &&
+                    userProfile.yearSemester === sem;
+
+            %>
+
+            <!-- Current semester gets highlighted dynamically -->
+
+            <div class="card shadow-sm mb-4 <%= isCurrent ? 'border-primary' : '' %>">
+
+                <div class="card-header d-flex justify-content-between align-items-center
+                    <%= isCurrent ? 'bg-primary text-white' : 'bg-light' %>">
+
+                    <!-- Display semester name -->
+
+                    <span class="fw-semibold">
+                        <%= sem %>
+                    </span>
+
+                    <!-- Display badge for current semester -->
+
+                    <% if (isCurrent) { %>
+
+                        <span class="badge bg-light text-primary">
+                            Current Semester
+                        </span>
+
+                    <% } %>
+
+                </div>
+
+                <div class="card-body p-0">
+
+                    <!-- Table displaying all goals -->
+                    <!-- belonging to the current semester -->
+
+                    <table class="table table-bordered table-striped table-light mb-0">
+
+                        <thead>
+                            <tr>
+                                <th>Goal Title</th>
+                                <th>Related Module</th>
+                                <th>Target Date</th>
+                                <th>Status</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+
+                        <tbody>
+
+                            <!-- Loop through all goals inside -->
+                            <!-- the current semester group -->
+
+                            <% grouped[sem].forEach(function(goal) { %>
+
+                            <tr>
+
+                                <td><%= goal.goalTitle %></td>
+
+                                <td><%= goal.relatedModule %></td>
+
+                                <td><%= goal.targetDate %></td>
+
+                                <td><%= goal.status %></td>
+
+                                <td>
+
+                                    <!-- View goal details button -->
+
+                                    <a href="/goalDetails/<%= goal.index %>"
+                                       class="btn btn-info btn-sm">
+
+                                        <i class="fa-solid fa-circle-info"></i>
+
+                                    </a>
+
+                                    <!-- Edit goal button -->
+
+                                    <a href="/editGoal/<%= goal.index %>"
+                                       class="btn btn-warning btn-sm">
+
+                                        <i class="fa-regular fa-pen-to-square"></i>
+
+                                    </a>
+
+                                    <!-- Delete goal button -->
+                                    <!-- Confirmation popup prevents accidental deletion -->
+
+                                    <a href="/deleteGoal/<%= goal.index %>"
+                                       class="btn btn-danger btn-sm"
+
+                                       onclick="return confirm('Are you sure you want to delete this study goal?')">
+
+                                        <i class="fa-regular fa-trash-can"></i>
+
+                                    </a>
+
+                                </td>
+
+                            </tr>
+
+                            <% }); %>
+
+                        </tbody>
+
+                    </table>
+
+                </div>
+
+            </div>
+
+            <% }); %>
+
+        <% } %>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

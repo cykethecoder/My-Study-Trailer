@@ -1,0 +1,132 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Edit Profile</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+<%- include("partials/header") %>
+
+<!-- Profile editing form -->
+<!-- Allows users to update personalised information -->
+<!-- previously entered from the 'Get to Know You' feature -->
+
+<div class="container mt-5 page-box">
+    <h1>Edit Profile</h1>
+    <p class="text-muted">Update your profile if there are any changes.</p>
+
+    <form action="/saveProfile" method="POST">
+<!-- Displays the user's previously saved name -->
+<!-- so the user can edit instead of re-entering everything -->
+
+<!-- Existing user profile data is displayed automatically -->
+<!-- so users can edit current information easily -->
+        <div class="mb-3">
+            <label class="form-label">Name</label>
+            <input 
+                type="text" 
+                name="name" 
+                class="form-control"
+                value="<%= userProfile ? userProfile.name : '' %>"
+                required>
+        </div>
+<!-- Semester dropdown automatically shows -->
+<!-- the user's currently saved semester -->
+        <div class="mb-3">
+            <label class="form-label">Current Year & Semester</label>
+            <select name="yearSemester" class="form-select" required>
+                <option value="">Select year & semester</option>
+
+                <% const semesters = [
+                    "Year 1 Semester 1",
+                    "Year 1 Semester 2",
+                    "Year 2 Semester 1",
+                    "Year 2 Semester 2",
+                    "Year 3 Semester 1",
+                    "Year 3 Semester 2"
+                ]; %>
+
+                <% semesters.forEach(sem => { %>
+                    <option value="<%= sem %>" 
+                        <%= userProfile && userProfile.yearSemester === sem ? "selected" : "" %>>
+                        <%= sem %>
+                    </option>
+                <% }) %>
+            </select>
+        </div>
+
+        <h5 class="mt-4">Semester Period</h5>
+<!-- Semester period feature -->
+<!-- Allows users to set semester start and end period -->
+<!-- used for automatic semester progression enhancement -->
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">From Month</label>
+                <input 
+                    type="number" 
+                    name="fromMonth" 
+                    class="form-control"
+                    min="1" 
+                    max="12"
+                    value="<%= userProfile ? userProfile.fromMonth : '' %>">
+            </div>
+
+            <div class="col-md-6">
+                <label class="form-label">From Year</label>
+                <input 
+                    type="number" 
+                    name="fromYear" 
+                    class="form-control"
+                    value="<%= userProfile ? userProfile.fromYear : '2026' %>">
+            </div>
+        </div>
+
+        <div class="row mb-3">
+            <div class="col-md-6">
+                <label class="form-label">To Month</label>
+                <input 
+                    type="number" 
+                    name="toMonth" 
+                    class="form-control"
+                    min="1" 
+                    max="12"
+                    value="<%= userProfile ? userProfile.toMonth : '' %>">
+            </div>
+<!-- Displays previously saved ending year -->
+<!-- Used together with auto-semester update feature -->
+
+            <div class="col-md-6">
+                <label class="form-label">To Year</label>
+                <input 
+                    type="number" 
+                    name="toYear" 
+                    class="form-control"
+                    value="<%= userProfile ? userProfile.toYear : '2026' %>">
+            </div>
+        </div>
+
+        <div class="mb-3">
+            <label class="form-label">Diploma</label>
+            <input 
+                type="text" 
+                name="diploma" 
+                class="form-control"
+                value="<%= userProfile ? userProfile.diploma : '' %>"
+                placeholder="e.g. Diploma in Cybersecurity & Digital Forensics"
+                required>
+        </div>
+
+        <button type="submit" class="btn btn-primary">Save Changes</button>
+        <a href="/" class="btn btn-secondary">Cancel</a>
+
+    </form>
+</div>
+
+<script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+</body>
+</html>

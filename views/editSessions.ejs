@@ -1,0 +1,103 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Study Session</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Edit Study Session</h1>
+
+        <form action="/editSessions/<%= id %>" method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Subject:</label>
+                <input type="text" name="subject" class="form-control" value="<%= session.subject %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Date:</label>
+                <input type="date" name="date" class="form-control" value="<%= session.date %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Duration:</label>
+                <input type="number" name="duration" class="form-control" value="<%= session.duration %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Focus Rating:</label>
+                <select name="focusRating" class="form-control" required>
+                    <option value="1" <%= session.focusRating == "1" ? "selected" : "" %>>1 - Very Low</option>
+                    <option value="2" <%= session.focusRating == "2" ? "selected" : "" %>>2 - Low</option>
+                    <option value="3" <%= session.focusRating == "3" ? "selected" : "" %>>3 - Average</option>
+                    <option value="4" <%= session.focusRating == "4" ? "selected" : "" %>>4 - Good</option>
+                    <option value="5" <%= session.focusRating == "5" ? "selected" : "" %>>5 - Excellent</option>
+                </select>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Reflection:</label>
+                <textarea name="reflection" class="form-control" required><%= session.reflection %></textarea>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Study Session Image Link:</label>
+
+                <input type="text"
+                    name="imageUrl"
+                    class="form-control"
+                    value="<%= session.imageUrl %>"
+                    placeholder="Example: /imgs/study1.jpg or https://example.com/image.jpg">
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Year &amp; Semester:</label>
+                <select name="yearSemester" class="form-control" required>
+                    <option value="" disabled>Select year &amp; semester</option>
+
+                    // Array storing all semester options
+                    <%
+                        const semOptions = [
+                            "Year 1 Semester 1", "Year 1 Semester 2",
+                            "Year 2 Semester 1", "Year 2 Semester 2",
+                            "Year 3 Semester 1", "Year 3 Semester 2"
+                        ];
+                    // forEach loop goes through every semester option
+                    // one by one dynamically
+                    //
+                    // 'opt' represents the current semester option
+                    // currently being processed in the loop
+                    //
+                    // Example:
+                    // First loop  -> opt = "Year 1 Semester 1"
+                    // Second loop -> opt = "Year 1 Semester 2"
+                        semOptions.forEach(function(opt) {
+                            const sel = session.yearSemester === opt ? 'selected' : '';
+                    %>
+                        <option value="<%= opt %>" <%= sel %>><%= opt %></option>
+                    <% }); %>
+                </select>
+            </div>
+
+            <button type="submit" class="btn btn-warning">Update Session</button>
+            <a href="/sessions" class="btn btn-secondary">Cancel</a>
+
+        </form>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+</html>

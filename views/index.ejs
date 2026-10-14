@@ -1,0 +1,348 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>StudyTrailer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <!-- 'Get to know you' modal — only shown for new users -->
+    <% if (!userProfile) { %>
+    <div class="modal fade" id="profileModal" tabindex="-1" aria-labelledby="profileModalLabel" aria-hidden="true" data-bs-backdrop="static" data-bs-keyboard="false">
+        <div class="modal-dialog modal-dialog-centered modal-lg">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="profileModalLabel">👋 Get to Know You</h5>
+                </div>
+                <form action="/saveProfile" method="POST">
+                    <div class="modal-body">
+                        <p class="text-muted mb-3">Before we get started, tell us a little about yourself!</p>
+
+                        <div class="mb-3">
+                            <label for="profileName" class="form-label fw-semibold">Name</label>
+                            <input type="text" class="form-control" id="profileName" name="name" placeholder="e.g. John Tan" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profileYearSem" class="form-label fw-semibold">Current Year &amp; Semester</label>
+                            <select class="form-select" id="profileYearSem" name="yearSemester" required>
+                                <option value="" disabled selected>Select year &amp; semester</option>
+                                <option value="Year 1 Semester 1">Year 1 Semester 1</option>
+                                <option value="Year 1 Semester 2">Year 1 Semester 2</option>
+                                <option value="Year 2 Semester 1">Year 2 Semester 1</option>
+                                <option value="Year 2 Semester 2">Year 2 Semester 2</option>
+                                <option value="Year 3 Semester 1">Year 3 Semester 1</option>
+                                <option value="Year 3 Semester 2">Year 3 Semester 2</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Semester Period</label>
+                            <div class="row g-2">
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">From</label>
+                                    <div class="d-flex gap-1">
+                                        <select class="form-select form-select-sm" name="fromMonth" id="fromMonth" required>
+                                            <option value="" disabled selected>Month</option>
+                                            <option value="1">Jan</option><option value="2">Feb</option>
+                                            <option value="3">Mar</option><option value="4">Apr</option>
+                                            <option value="5">May</option><option value="6">Jun</option>
+                                            <option value="7">Jul</option><option value="8">Aug</option>
+                                            <option value="9">Sep</option><option value="10">Oct</option>
+                                            <option value="11">Nov</option><option value="12">Dec</option>
+                                        </select>
+                                        <input type="number" class="form-control form-control-sm" name="fromYear" id="fromYear"
+                                            placeholder="Year" min="2000" max="2100" style="width:80px;" required>
+                                    </div>
+                                </div>
+                                <div class="col-6">
+                                    <label class="form-label text-muted small mb-1">To</label>
+                                    <div class="d-flex gap-1">
+                                        <select class="form-select form-select-sm" name="toMonth" id="toMonth" required>
+                                            <option value="" disabled selected>Month</option>
+                                            <option value="1">Jan</option><option value="2">Feb</option>
+                                            <option value="3">Mar</option><option value="4">Apr</option>
+                                            <option value="5">May</option><option value="6">Jun</option>
+                                            <option value="7">Jul</option><option value="8">Aug</option>
+                                            <option value="9">Sep</option><option value="10">Oct</option>
+                                            <option value="11">Nov</option><option value="12">Dec</option>
+                                        </select>
+                                        <input type="number" class="form-control form-control-sm" name="toYear" id="toYear"
+                                            placeholder="Year" min="2000" max="2100" style="width:80px;" required>
+                                    </div>
+                                </div>
+                            </div>
+                            <div id="nextSemesterHint" class="form-text mt-2" style="display:none;"></div>
+                        </div>
+
+                        <div class="mb-3">
+                            <label for="profileDiploma" class="form-label fw-semibold">Diploma</label>
+                            <input type="text" class="form-control" id="profileDiploma" name="diploma" placeholder="e.g. Diploma in IT" required>
+                        </div>
+                    </div>
+                    <div class="modal-footer">
+                        <button type="submit" class="btn btn-primary">Save Profile</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+    <% } %>
+
+    <div class="container mt-5 page-box">
+
+        <% if (userProfile) { %>
+        <h1>Welcome back, <%= userProfile.name %>! 👋</h1>
+        <p class="text-muted"><%= userProfile.diploma %> &bull; <%= userProfile.yearSemester %></p>
+        <% } else { %>
+        <h1>Welcome to StudyTrailer!</h1>
+        <% } %>
+
+        <p>
+        Welcome to StudyTrailer — your personalised learning companion designed
+        to help you stay organised, motivated, and consistent throughout your
+        academic journey. Track your study sessions, manage your goals,
+        monitor your progress, and celebrate every small achievement. JIAYOUU & KEEP GOING!
+        </p>
+
+        <div class="row mt-4">
+
+            <!-- Exam Countdown -->
+            <div class="col-12 mb-3">
+                <div class="card shadow-sm p-3">
+                    <h2 class="mb-3">Important Dates</h2>
+
+                    <% if (nextExam) { %>
+                        <div class="alert alert-primary py-2 mb-3">
+                            <span class="fw-semibold">Next up:</span>
+                            <%= nextExam.examType %> – <%= nextExam.module %>
+                            on <%= nextExam.examDate %> &nbsp;
+                            <span id="countdown" class="fw-bold"></span>
+                        </div>
+                    <% } %>
+
+                    <% if (upcomingExams.length === 0) { %>
+                        <p class="text-muted">No upcoming exams found. <a href="/addImportantDate">Add one</a> to start the countdown!</p>
+                    <% } else { %>
+                        <table class="table table-bordered text-center mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Module</th>
+                                    <th>Exam Date</th>
+                                    <th>Days Left</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                <% upcomingExams.forEach(function(e) { %>
+                                <tr>
+                                    <td class="text-start">
+                                        <%= e.module %>
+                                        <%
+                                            const badgeMap = { CA1: 'bg-info text-dark', SA1: 'bg-warning text-dark', CA2: 'bg-primary', SA2: 'bg-danger' };
+                                            const bc = badgeMap[e.examType] || 'bg-secondary';
+                                        %>
+                                        <span class="badge <%= bc %> ms-1"><%= e.examType %></span>
+                                    </td>
+                                    <td><%= e.examDate %></td>
+                                    <td>
+                                        <% if (e.daysLeft === 0) { %>
+                                            <span class="badge bg-danger">Today!</span>
+                                        <% } else { %>
+                                            <span class="fw-bold text-danger"><%= e.daysLeft %></span> day<%= e.daysLeft !== 1 ? 's' : '' %>
+                                        <% } %>
+                                    </td>
+                                </tr>
+                                <% }); %>
+                            </tbody>
+                        </table>
+                    <% } %>
+                </div>
+            </div>
+
+            <!-- Study Sessions Summary -->
+            <div class="col-md-6">
+
+                <div class="card shadow-sm p-3 mb-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">Study Sessions</h2>
+                        <a href="/sessions" class="btn btn-primary btn-sm">View Sessions</a>
+                    </div>
+                    <p class="text-muted mt-1"><%= sessions.length %> sessions recorded</p>
+
+                    <p>
+                    Every study session is a step closer towards mastery.
+                    Record your learning progress, monitor your focus levels,
+                    and reflect on what you achieved to build stronger
+                    study habits over time.
+                    </p>
+
+                </div>
+
+            </div>
+
+
+            <!-- Study Goals Summary -->
+            <div class="col-md-6">
+
+                <div class="card shadow-sm p-3 mb-3">
+
+                    <div class="d-flex justify-content-between align-items-center">
+                        <h2 class="mb-0">Study Goals</h2>
+                        <a href="/goals" class="btn btn-primary btn-sm">View Study Goals</a>
+                    </div>
+                    <p class="text-muted mt-1"><%= totalGoals %> goals recorded</p>
+                    
+                    <p>
+                        Great achievements begin with clear goals!
+                        Set meaningful study targets, track your progress,
+                        and stay motivated as you move from “Not Started”
+                        to “Completed”!
+                    </p>
+
+                    <table class="table table-bordered text-center mb-3">
+                        <thead>
+                            <tr>
+                                <th>Completed</th>
+                                <th>In Progress</th>
+                                <th>Not Started</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <tr>
+                                <td style="background-color: #b7e4c7;"><%=completedGoals %></td>
+                                <td style="background-color: #ffd8a8;"><%=inProgressGoals %></td>
+                                <td style="background-color: #ffc9c9;"><%=notStartedGoals %></td>
+                            </tr>
+                        </tbody>
+                    </table>
+
+                </div>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <% if (!userProfile) { %>
+    <script>
+    // Open the "Get to Know You" modal automatically
+    // when the user visits the website for the first time
+        const profileModal = new bootstrap.Modal(document.getElementById('profileModal'));
+        profileModal.show(); //Open up modal
+
+        // Auto-set today's year for From and To year fields
+        const thisYear = new Date().getFullYear(); //Gets our current year
+        document.getElementById('fromYear').value = thisYear;
+        document.getElementById('toYear').value = thisYear;
+    // Special Feature:
+    // Stores the correct semester progression order
+    // used for automatic semester advancement
+
+        // Next-semester hint
+        const semesterOrder = [
+            "Year 1 Semester 1", "Year 1 Semester 2",
+            "Year 2 Semester 1", "Year 2 Semester 2",
+            "Year 3 Semester 1", "Year 3 Semester 2"
+        ];
+    // Array storing short month names
+    // used for displaying dynamic semester hints
+        const monthNames = ["Jan","Feb","Mar","Apr","May","Jun","Jul","Aug","Sep","Oct","Nov","Dec"];
+    // Special Feature:
+        // Get the semester ending month/year
+        // entered by the user
+        // Dynamically predicts and displays
+        // what the next semester will become
+        // Get the user's current semester
+        // Get the helper text area
+
+        function updateNextSemHint() {
+            const toMonth  = document.getElementById('toMonth').value;
+            const toYear   = document.getElementById('toYear').value;
+            const yearSem  = document.getElementById('profileYearSem').value;
+            const hint     = document.getElementById('nextSemesterHint');
+
+            if (toMonth && toYear && yearSem) {
+            // Find the current semester position
+            // inside the semesterOrder array
+                const idx  = semesterOrder.indexOf(yearSem);
+            // Calculate the next semester automatically
+            // Example:
+            // Year 1 Semester 1 -> Year 1 Semester 2
+                const next = idx !== -1 && idx < semesterOrder.length - 1
+                    ? semesterOrder[idx + 1] : yearSem;
+                // Next semester starts the month after toMonth
+                // Calculate the estimated starting month
+                // of the next semester
+                const nextFromMonth = (parseInt(toMonth) % 12) + 1;
+                // Increase year automatically if month becomes January
+                const nextFromYear  = nextFromMonth === 1
+                    ? parseInt(toYear) + 1 : parseInt(toYear);
+            // Display the dynamic next-semester helper message
+                hint.style.display = 'block';
+                hint.innerHTML = `After <strong>${monthNames[toMonth-1]} ${toYear}</strong>, system will auto-advance to <strong>${next}</strong> (starts ~${monthNames[nextFromMonth-1]} ${nextFromYear}).`;
+            // Hide helper text if information is incomplete
+            } else {
+                hint.style.display = 'none';
+            }
+        }
+    // Detect changes made to semester period inputs
+    // and automatically update the helper message
+        ['toMonth','toYear','profileYearSem'].forEach(id =>
+            document.getElementById(id).addEventListener('change', updateNextSemHint)
+        );
+    // Also update helper message while user types the year
+        document.getElementById('toYear').addEventListener('input', updateNextSemHint);
+    </script>
+    <% } %>
+<!-- Exam countdown script only runs -->
+<!-- when an upcoming exam exists -->
+
+    <% if (nextExam) { %>
+    <script>
+        const examDate = new Date("<%= nextExam.examDate %>T00:00:00");
+        // Special Feature:
+        // Live countdown timer for upcoming exams
+
+        // Get the current date and time
+        function updateCountdown() {
+            const now = new Date();
+        // Calculate the time difference between
+        // the exam date and the current time
+            const diff = examDate - now;
+
+            if (diff <= 0) {
+                document.getElementById("countdown").textContent = "Exam day is here! Good luck! 🍀";
+                return;
+            }
+        // Convert remaining milliseconds into:
+        // days, hours, minutes and seconds
+            const days    = Math.floor(diff / (1000 * 60 * 60 * 24));
+            const hours   = Math.floor((diff % (1000 * 60 * 60 * 24)) / (1000 * 60 * 60));
+            const minutes = Math.floor((diff % (1000 * 60 * 60)) / (1000 * 60));
+            const seconds = Math.floor((diff % (1000 * 60)) / 1000);
+        // Display the live countdown dynamically
+        // on the dashboard
+            document.getElementById("countdown").textContent =
+                `${days}d ${hours}h ${minutes}m ${seconds}s`;
+        }
+
+        updateCountdown();
+        // Update countdown every 1 second
+        setInterval(updateCountdown, 1000);
+    </script>
+    <% } %>
+
+</body>
+</html>

@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Session Details</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Study Session Details</h1>
+
+        <div class="card mt-3">
+
+            <div class="card-body">
+
+                <!-- Subject -->
+                <h4 class="card-title">
+                    <%= session.subject %>
+                </h4>
+
+                <br>
+
+                <!-- Session information -->
+                <p>
+                    <strong>Date:</strong>
+                    <%= session.date %>
+                </p>
+
+                <p>
+                    <strong>Duration:</strong>
+                    <%= session.duration %> hour(s)
+                </p>
+
+                <p>
+                    <strong>Focus Rating:</strong>
+                    <%= session.focusRating %>/5
+                </p>
+
+
+                <p>
+                    <strong>Reflection:</strong>
+                    <%= session.reflection %>
+                </p>
+
+
+                <!-- Display study session image if image link exists -->
+                <% if (session.imageUrl) { %>
+
+                    <div class="mt-4">
+
+                        <h5>Study Session Image:    </h5>
+
+                        <img src="<%= session.imageUrl %>"
+                             class="img-fluid rounded shadow"
+                             alt="Study Session Image"
+                             style="max-width: 500px;">
+
+                    </div>
+
+                <% } %>
+
+                <br>
+
+                <!-- Buttons -->
+                <a href="/editSessions/<%= id %>"
+                   class="btn btn-warning">
+                    Edit
+                </a>
+
+                <a href="/sessions"
+                   class="btn btn-secondary">
+                    Back
+                </a>
+
+            </div>
+
+        </div>
+
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+</body>
+
+</html>

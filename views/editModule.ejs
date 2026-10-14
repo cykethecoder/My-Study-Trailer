@@ -1,0 +1,116 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Edit Module</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <h1>Edit Module</h1>
+
+        <form action="/editModule/<%= id %>" method="POST">
+
+            <div class="mb-3">
+                <label class="form-label">Module Code:</label>
+                <input type="text" name="moduleCode" class="form-control"
+                       value="<%= module.moduleCode %>" required>
+            </div>
+
+            <div class="mb-3">
+                <label class="form-label">Module Name:</label>
+                <input type="text" name="moduleName" class="form-control"
+                       value="<%= module.moduleName %>" required>
+            </div>
+
+            <div class="mb-3">
+
+                <label class="form-label">Current Grade:</label>
+
+    <select name="currentGrade" class="form-control" required>
+
+        <option value="No Grade Yet"
+            <%= module.currentGrade == "DIST" ? "selected" : "" %>>
+            No Grade Yet
+        </option>
+
+        <option value="DIST"
+            <%= module.currentGrade == "DIST" ? "selected" : "" %>>
+            DIST
+        </option>
+
+        <option value="A"
+            <%= module.currentGrade == "A" ? "selected" : "" %>>
+            A
+        </option>
+
+        <option value="B+"
+            <%= module.currentGrade == "B+" ? "selected" : "" %>>
+            B+
+        </option>
+
+        <option value="B"
+            <%= module.currentGrade == "B" ? "selected" : "" %>>
+            B
+        </option>
+
+        <option value="C+"
+            <%= module.currentGrade == "C+" ? "selected" : "" %>>
+            C+
+        </option>
+
+        <option value="C"
+            <%= module.currentGrade == "C" ? "selected" : "" %>>
+            C
+        </option>
+
+        <option value="D"
+            <%= module.currentGrade == "D" ? "selected" : "" %>>
+            D
+        </option>
+
+        <option value="NGP"
+            <%= module.currentGrade == "NGP" ? "selected" : "" %>>
+            Non-Gradable-Pass
+        </option>
+
+    </select>
+
+</div>
+
+        <div class="mb-3">
+            <label class="form-label">Year &amp; Semester:</label>
+            <select name="yearSemester" class="form-control" required>
+                <option value="" disabled>Select year &amp; semester</option>
+                <%
+                    const semOptions = [
+                        "Year 1 Semester 1", "Year 1 Semester 2",
+                        "Year 2 Semester 1", "Year 2 Semester 2",
+                        "Year 3 Semester 1", "Year 3 Semester 2"
+                    ];
+                    semOptions.forEach(function(opt) {
+                        const sel = module.yearSemester === opt ? 'selected' : '';
+                %>
+                    <option value="<%= opt %>" <%= sel %>><%= opt %></option>
+                <% }); %>
+            </select>
+        </div>
+
+        <button type="submit" class="btn btn-warning">
+            Save Changes
+        </button>
+
+        <a href="/modules" class="btn btn-secondary">
+            Cancel
+        </a>
+
+    </form>

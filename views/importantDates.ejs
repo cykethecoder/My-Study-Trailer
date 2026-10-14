@@ -1,0 +1,186 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Important Dates – StudyTrailer</title>
+
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/css/bootstrap.min.css" rel="stylesheet">
+    <link rel="stylesheet" href="/css/styles.css">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/7.0.1/css/all.min.css">
+</head>
+
+<body>
+
+    <%- include("partials/header") %>
+
+    <div class="container mt-5 page-box">
+
+        <div class="d-flex justify-content-between align-items-center mb-4">
+            <h1>Important Dates</h1>
+            <a href="/addImportantDate" class="btn btn-success">Add Date</a>
+        </div>
+
+        <% const semesters = Object.keys(grouped); %>
+
+        <% if (semesters.length === 0) { %>
+            <div class="alert alert-info">No important dates added yet. Click <strong>+ Add Date</strong> to get started!</div>
+        <% } %>
+
+        <% semesters.forEach(function(sem) { %>
+
+            <%
+                // Highlight the section if it matches the user's current semester
+                const isCurrent = userProfile && userProfile.yearSemester === sem;
+            %>
+
+            <div class="card shadow-sm mb-4 <%= isCurrent ? 'border-primary' : '' %>">
+                <div class="card-header d-flex justify-content-between align-items-center
+                    <%= isCurrent ? 'bg-primary text-white' : 'bg-light' %>">
+                    <span class="fw-semibold"><%= sem %></span>
+                    <% if (isCurrent) { %>
+                        <span class="badge bg-light text-primary">Current Semester</span>
+                    <% } %>
+                </div>
+                <div class="card-body p-0">
+                    <table class="table table-bordered mb-0">
+                        <thead class="table-light">
+                            <tr>
+                                <th>Module</th>
+                                <th>Lessons Covered</th>
+                                <th>Exam Date</th>
+                                <th>Exam Type</th>
+                                <th>Action</th>
+                            </tr>
+                        </thead>
+                        <tbody>
+                            <% grouped[sem].forEach(function(entry) { %>
+                            <tr>
+                                <td><%= entry.module %></td>
+                                <td><%= entry.lessonsCovered %></td>
+                                <td><%= entry.examDate %></td>
+                                <td>
+                                    <%
+                                        const badgeMap = {
+                                            CA1: 'bg-info text-dark',
+                                            CA2: 'bg-primary',
+                                            FA: 'bg-danger'
+                                        };
+                                        const badgeClass = badgeMap[entry.examType] || 'bg-secondary';
+                                    %>
+                                    <span class="badge <%= badgeClass %>"><%= entry.examType %></span>
+                                </td>
+                                <td>
+                                    <button class="btn btn-sm btn-warning me-1 btn-edit-date"
+                                        data-bs-toggle="modal" data-bs-target="#editDateModal"
+                                        data-index="<%= entry.index %>"
+                                        data-module="<%= entry.module %>"
+                                        data-lessons="<%= entry.lessonsCovered %>"
+                                        data-date="<%= entry.examDate %>"
+                                        data-type="<%= entry.examType %>"
+                                        data-semester="<%= entry.yearSemester %>">
+                                        <i class="fa-regular fa-pen-to-square"></i>
+                                    </button>
+                                    <a href="/deleteImportantDate/<%= entry.index %>"
+                                       class="btn btn-sm btn-danger"
+                                       onclick="return confirm('Delete this entry?')">
+                                       <i class="fa-regular fa-trash-can"></i>
+                                    </a>
+                                </td>
+                            </tr>
+                            <% }); %>
+                        </tbody>
+                    </table>
+                </div>
+            </div>
+
+        <% }); %>
+
+    </div>
+
+    <!-- Edit Important Date Modal -->
+    <div class="modal fade" id="editDateModal" tabindex="-1" aria-labelledby="editDateModalLabel" aria-hidden="true">
+        <div class="modal-dialog modal-dialog-centered">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="editDateModalLabel">Edit Important Date</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <form id="editDateForm" method="POST">
+                    <div class="modal-body">
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Module</label>
+                            <input type="text" class="form-control" id="editModule" name="module" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Lessons Covered</label>
+                            <input type="text" class="form-control" id="editLessons" name="lessonsCovered" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Exam Date</label>
+                            <input type="date" class="form-control" id="editExamDate" name="examDate" required>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Exam Type</label>
+                            <select class="form-select" id="editExamType" name="examType" required>
+                                <option value="CA1">CA1</option>
+                                <option value="CA2">CA2</option>
+                                <option value="FA">FA</option>
+                            </select>
+                        </div>
+
+                        <div class="mb-3">
+                            <label class="form-label fw-semibold">Year &amp; Semester</label>
+                            <select class="form-select" id="editYearSemester" name="yearSemester" required>
+                                <option value="Year 1 Semester 1">Year 1 Semester 1</option>
+                                <option value="Year 1 Semester 2">Year 1 Semester 2</option>
+                                <option value="Year 2 Semester 1">Year 2 Semester 1</option>
+                                <option value="Year 2 Semester 2">Year 2 Semester 2</option>
+                                <option value="Year 3 Semester 1">Year 3 Semester 1</option>
+                                <option value="Year 3 Semester 2">Year 3 Semester 2</option>
+                            </select>
+                        </div>
+
+                    </div>
+                    <div class="modal-footer">
+                        <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Cancel</button>
+                        <button type="submit" class="btn btn-warning">Save Changes</button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.8/dist/js/bootstrap.bundle.min.js"></script>
+
+    <script>
+        // Select all edit buttons for important dates
+        document.querySelectorAll('.btn-edit-date').forEach(function(btn) {
+         // Add a click event to each edit button
+            btn.addEventListener('click', function() {
+                // Get the index of the selected important date
+                // from the button's data-index attribute
+                const idx      = this.dataset.index;
+                const form     = document.getElementById('editDateForm');
+
+                // Set the form action dynamically so the correct
+                // important date entry will be updated in app.js
+                form.action    = '/editImportantDate/' + idx;
+            // Fill the modal input fields with the existing
+            // values from the selected important date
+                document.getElementById('editModule').value    = this.dataset.module;
+                document.getElementById('editLessons').value   = this.dataset.lessons;
+                document.getElementById('editExamDate').value  = this.dataset.date;
+                document.getElementById('editExamType').value  = this.dataset.type;
+                document.getElementById('editYearSemester').value = this.dataset.semester;
+            });
+        });
+    </script>
+
+</body>
+</html>
