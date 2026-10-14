@@ -1,0 +1,28 @@
+/* Apply background image to all pages */
+body {
+    background-image: url('/imgs/backgrd.jpg');
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-attachment: fixed;
+    background-position: center;
+    margin: 0;
+    padding: 0;
+}
+
+/* White transparent box to make content readable */
+.page-box {
+    background-color: rgba(255, 255, 255, 0.88);
+    color: black;
+    padding: 30px;
+    border-radius: 15px;
+}
+
+/* Improve heading spacing */
+h1 {
+    margin-bottom: 20px;
+}
+
+/* Make table text easier to read */
+table {
+    text-align: left;
+}
