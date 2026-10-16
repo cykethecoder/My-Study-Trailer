@@ -5,7 +5,7 @@ StudyTrailer is a full-stack study management web application designed to help s
 Users can manage their modules, record study sessions, set study goals, track important academic dates and monitor their progress through a centralised dashboard.
 
 ## About the Project
-
+•	Built using JavaScript, Node.js, Express.js, EJS, HTML, CSS and Bootstrap.
 ### Project Purpose
 
 This project was developed to apply full-stack web development concepts by creating a practical system that allows students to organise and monitor different aspects of their academic progress.
